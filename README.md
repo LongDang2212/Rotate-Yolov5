@@ -24,3 +24,8 @@
 ## Detect
     python rotate_detect.py --weights rotate_best.pt --img 1024 \
     --conf 0.75 --source Lunch2_000001.jpg --iou-thres 0.4 
+
+## Export ONNX
+    export ONNX_EXPORT=1
+    python models/export.py --weights weights/rotate_best.pt --include onnx --dynamic --opset-version 11
+
