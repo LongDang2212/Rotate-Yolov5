@@ -7,6 +7,7 @@ Usage:
 import argparse
 import logging
 import sys
+import os
 from copy import deepcopy
 from pathlib import Path
 
@@ -24,6 +25,9 @@ try:
     import thop  # for FLOPs computation
 except ImportError:
     thop = None
+if os.getenv("ONNX_EXPORT") is None:
+    onnx_export = False
+else: onnx_export = True
 
 
 class Detect(nn.Module):
@@ -307,6 +311,8 @@ class Rotate_Detect(Detect):
         z = []  # inference output
         for i in range(self.nl):
             x[i] = self.m[i](x[i])  # conv
+            if onnx_export:
+                continue
             bs, _, ny, nx = x[i].shape  # x(bs,261,20,20) to x(bs,3,20,20,87)
             x[i] = x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
 
@@ -331,6 +337,8 @@ class Rotate_Detect(Detect):
                     wh = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i].view(1, self.na, 1, 1, 2)  # wh
                     y = torch.cat((xy, wh, y[..., 4:]), -1)
                 z.append(y.view(bs, -1, self.no))
+        if onnx_export:
+            return x
                 
         return x if self.training else (torch.cat(z, 1), x)
     
