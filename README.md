@@ -27,5 +27,5 @@
 
 ## Export ONNX
     export ONNX_EXPORT=1
-    python models/export.py --weights weights/rotate_best.pt --include onnx --dynamic --opset-version 11
+    python models/export.py --weights weights/rotate_best.pt --include onnx --dynamic --opset-version 10
 
