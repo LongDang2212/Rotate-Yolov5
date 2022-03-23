@@ -16,6 +16,7 @@ import torch.nn as nn
 from torch.utils.mobile_optimizer import optimize_for_mobile
 
 import models
+from models.yolo import Model, Rotate_Model
 from models.experimental import attempt_load
 from utils.activations import Hardswish, SiLU
 from utils.general import colorstr, check_img_size, check_requirements, file_size, set_logging
@@ -39,10 +40,18 @@ def export(weights='./yolov5s.pt',  # weights path
     include = [x.lower() for x in include]
     img_size *= 2 if len(img_size) == 1 else 1  # expand
 
+    import os
+    pwd = os.path.dirname(os.path.realpath(__file__))
     # Load PyTorch model
     device = select_device(device)
     assert not (device.type == 'cpu' and opt.half), '--half only compatible with GPU export, i.e. use --device 0'
-    model = attempt_load(weights, map_location=device)  # load FP32 model
+    # model = attempt_load(weights, map_location=device)  # load FP32 model
+
+    cfg_path = os.path.join(pwd, "../models/rotate_yolov5s_cepdof.yaml")
+    nc = 1
+    model = Rotate_Model(cfg_path, ch=3, nc=nc, anchors=None).to(device)
+    ckpt = torch.load(weights, map_location=device)  # load checkpoint
+    model.load_state_dict(ckpt["ema"].state_dict())
     labels = model.names
 
     # Input
@@ -95,8 +104,8 @@ def export(weights='./yolov5s.pt',  # weights path
                               do_constant_folding=not train,
                               input_names=['images'],
                               output_names=['output'],
-                              dynamic_axes={'images': {0: 'batch', 2: 'height', 3: 'width'},  # shape(1,3,640,640)
-                                            'output': {0: 'batch', 1: 'anchors'}  # shape(1,25200,85)
+                              dynamic_axes={'images': {0: 'batch'},  # shape(1,3,640,640)
+                                            'output': {0: 'batch'}  # shape(1,25200,85)
                                             } if dynamic else None)
 
             # Checks
@@ -161,3 +170,4 @@ if __name__ == '__main__':
     set_logging()
 
     export(**vars(opt))
+

@@ -7,7 +7,6 @@ Usage:
 import argparse
 import logging
 import sys
-import os
 from copy import deepcopy
 from pathlib import Path
 
@@ -25,10 +24,10 @@ try:
     import thop  # for FLOPs computation
 except ImportError:
     thop = None
+import os
 if os.getenv("ONNX_EXPORT") is None:
     onnx_export = False
 else: onnx_export = True
-
 
 class Detect(nn.Module):
     stride = None  # strides computed during build
@@ -304,18 +303,21 @@ class Rotate_Detect(Detect):
     def __init__(self, nc=80, anchors=(), ch=(), inplace=True):  # detection layer for rotate boxes
         super(Rotate_Detect, self).__init__(nc, anchors, ch, inplace)        
         self.no = nc + 7  # number of outputs per anchor
+        # print(self.na)
         self.m = nn.ModuleList(nn.Conv2d(x, self.no * self.na, 1) for x in ch)  # output conv
 
     def forward(self, x):
         # x = x.copy()  # for profiling
         z = []  # inference output
+        # print(f"\nNum Anchor: {self.nl}\n")
         for i in range(self.nl):
             x[i] = self.m[i](x[i])  # conv
+            # print("\nori shape",x[i].shape)
             if onnx_export:
                 continue
             bs, _, ny, nx = x[i].shape  # x(bs,261,20,20) to x(bs,3,20,20,87)
             x[i] = x[i].view(bs, self.na, self.no, ny, nx).permute(0, 1, 3, 4, 2).contiguous()
-
+            # print("\nreshape", x[i].shape)
             if not self.training:  # inference
                 if self.grid[i].shape[2:4] != x[i].shape[2:4] or self.onnx_dynamic:
                     self.grid[i] = self._make_grid(nx, ny).to(x[i].device)
@@ -337,10 +339,11 @@ class Rotate_Detect(Detect):
                     wh = (y[..., 2:4] * 2) ** 2 * self.anchor_grid[i].view(1, self.na, 1, 1, 2)  # wh
                     y = torch.cat((xy, wh, y[..., 4:]), -1)
                 z.append(y.view(bs, -1, self.no))
+               # if len(z)==3:
+                   # print([z1.shape for z1 in z])
         if onnx_export:
-            return x
-                
-        return x if self.training else (torch.cat(z, 1), x)
+            return x    
+        return x if self.training else (torch.cat(z, 1),x)
     
 
 class Rotate_Model(Model):
@@ -427,3 +430,4 @@ if __name__ == '__main__':
     # logger.info("Run 'tensorboard --logdir=models' to view tensorboard at http://localhost:6006/")
     # tb_writer.add_graph(torch.jit.trace(model, img, strict=False), [])  # add model graph
     # tb_writer.add_image('test', img[0], dataformats='CWH')  # add model to tensorboard
+
