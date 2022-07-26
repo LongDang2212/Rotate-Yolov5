@@ -138,7 +138,7 @@
                  auto out_classes = static_cast<float *>(outputs[2]) + batch * top_n;
  
                  // sigmoid activation
-                 const int thread_count_ = 512;
+                 const int thread_count_ = 128;
                  int num_elem = f_size * f_size;
                  thread_count = (num_elem < thread_count_) ? num_elem : thread_count_;
                  softmax_kernel<<<(num_elem + thread_count - 1) / thread_count, thread_count, 0, stream>>>(in_data, scores_softmax, conf, in_boxes, num_elem);

@@ -38,7 +38,7 @@
 #include <thrust/system/cuda/detail/cub/device/device_radix_sort.cuh>
 #include <thrust/system/cuda/detail/cub/iterator/counting_input_iterator.cuh>
 
- constexpr int   kTPB     = 64;  // threads per block
+ constexpr int   kTPB     = 128;  // threads per block
  constexpr int   kCorners = 4;
  constexpr int   kPoints  = 8;
  
@@ -302,7 +302,7 @@
       thrust::cuda_cub::cub::DeviceRadixSort::SortPairsDescending(workspace, workspace_size, scores, scores_sorted,
        indices, indices_sorted, num_detections, 0, sizeof(*scores)*8, stream ); // From 8
      // Launch actual NMS kernel - 1 block with each thread handling n detections
-     const int max_threads = 1024;
+     const int max_threads = 128;
      int num_per_thread = ceil((float)num_detections/max_threads);
      nms_rotate_kernel<<<1, max_threads, 0, stream>>>(
        num_per_thread, nms_thresh, num_detections, indices_sorted, scores_sorted, in_classes, in_boxes);

@@ -1,0 +1,4 @@
+/home/longdd/Documents/ryolov5_jetson/deepstream/build/CMakeFiles/rebuild_cache.dir
+/home/longdd/Documents/ryolov5_jetson/deepstream/build/CMakeFiles/edit_cache.dir
+/home/longdd/Documents/ryolov5_jetson/deepstream/build/CMakeFiles/nvdsparsebbox_yolo.dir
+/home/longdd/Documents/ryolov5_jetson/deepstream/build/CMakeFiles/detect.dir

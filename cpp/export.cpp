@@ -33,11 +33,11 @@ int main(int argc, char *argv[])
 
 	bool verbose = true;
 	size_t workspace_size = (1ULL << 30);
-	const vector<int> dynamic_batch_opts{1, 8, 16};
+	const vector<int> dynamic_batch_opts{1, 2, 4};
 
 	// decode params
 	float score_thresh = 0.3f;
-	int top_n = 150;
+	int top_n = 100;
 	vector<vector<float>> anchors;
 	anchors = {{27,  26,  20,  40,  44,  19,  34,  34,  25,  47},
 						 {55,  24,  44,  38,  31,  61,  50,  50,  63,  45},
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
 	strides = {8, 16, 32};
 
 	// nms params
-	float nms_thresh = 0.5;
+	float nms_thresh = 0.3;
 	int detections_per_im = 50;
 
 	cout << "Building engine..." << endl;
