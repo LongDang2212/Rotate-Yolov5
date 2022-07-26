@@ -1,5 +1,0 @@
-/home/longdd/LongDD/Rotate-Yolov5/cpp/build/CMakeFiles/rebuild_cache.dir
-/home/longdd/LongDD/Rotate-Yolov5/cpp/build/CMakeFiles/edit_cache.dir
-/home/longdd/LongDD/Rotate-Yolov5/cpp/build/CMakeFiles/infer.dir
-/home/longdd/LongDD/Rotate-Yolov5/cpp/build/CMakeFiles/ryolo_trt.dir
-/home/longdd/LongDD/Rotate-Yolov5/cpp/build/CMakeFiles/export.dir

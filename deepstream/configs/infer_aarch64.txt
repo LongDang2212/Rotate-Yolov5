@@ -1,8 +1,8 @@
 [property]
 gpu-id=0
 net-scale-factor=0.0039215697906911373
-model-engine-file=/home/ivsr/Downloads/Rotate-Yolov5/cpp/build/mwr.engine
-labelfile-path=/home/ivsr/Downloads/Rotate-Yolov5/deepstream/labels.txt
+model-engine-file=/home/longdd/LongDD/Rotate-Yolov5/cpp/build/mwr.engine
+labelfile-path=/home/longdd/LongDD/Rotate-Yolov5/deepstream/labels.txt
 force-implicit-batch-dim=1
 #uff-input-blob-name=input_1
 batch-size=1
@@ -14,7 +14,7 @@ process-mode=1
 model-color-format=1  # RGB
 num-detected-classes=1
 cluster-mode=4  # 4: No clustering
-interval=0
+interval=1
 gie-unique-id=1
 #output-blob-names=output_bbox/BiasAdd;output_cov/Sigmoid
 #parse-bbox-func-name=NvDsInferParseRetinaNet

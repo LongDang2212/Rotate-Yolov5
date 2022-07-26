@@ -22,7 +22,7 @@
 #define INFER_PGIE_CONFIG_FILE "../configs/infer_x86.txt"
 #endif
 
-#define MAX_NUM_SOURCES 4
+#define MAX_NUM_SOURCES 1
 #define MUXER_OUTPUT_WIDTH 1056
 #define MUXER_OUTPUT_HEIGHT 960
 #define TILED_OUTPUT_WIDTH 1056
@@ -48,7 +48,7 @@ unsigned int nvds_lib_minor_version = NVDS_VERSION_MINOR;
 gint frame_number = 0;
 gint g_source_id_list[MAX_NUM_SOURCES];
 GMutex perf_lock;
-#define MAX_STREAMS 64
+#define MAX_STREAMS 1
 #define TIMESPEC_DIFF_USEC(timespec1, timespec2)      \
   (timespec1.tv_sec - timespec2.tv_sec) * 1000000.0 + \
       (timespec1.tv_nsec - timespec2.tv_nsec) / 1000.0
@@ -717,6 +717,7 @@ int main(int argc, char *argv[])
    */
   g_object_set(G_OBJECT(nvvidconv), "nvbuf-memory-type", 3, NULL);
 #endif
+  
 
   /* Set properties of the caps_filter element */
   GstCaps *caps =
